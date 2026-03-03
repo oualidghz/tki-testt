@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+==========================================================================
+【AI HANDOVER NOTE】
+1. DESIGN PHILOSOPHY:
+   - Academic Professionalism: Cette application éducative TKI adopte une approche « Swiss Academic Minimalism » — clarté typographique, hiérarchie visuelle stricte, et palette restreinte pour favoriser la concentration cognitive.
+   - Visual Style: Bento-inspired card surfaces avec glassmorphism subtil (backdrop-blur minimal), rim-light délicats sur les cartes pour créer une profondeur physique sans distraction. Pas de gradients agressifs, privilégier les surfaces monochromes avec micro-interactions.
+   - Rationale: Un test psychométrique nécessite une interface neutre et rassurante. Le bleu (confiance, stabilité) et le gris (neutralité académique) créent un environnement propice à la réflexion. Les transitions douces (300-400ms) réduisent la charge cognitive entre les questions.
+
+2. TYPOGRAPHY:
+   - Sans: Lato (primaire) + Roboto (fallback) — deux géométriques humanistes avec excellente lisibilité à 16-18px. Lato apporte une chaleur subtile (terminaisons arrondies) tout en restant professionnelle. Roboto assure la cohérence sur Android.
+   - Mono: IBM Plex Mono pour affichage de données (scores, pourcentages) — chasse fixe garantit l'alignement vertical des chiffres dans les tableaux de résultats.
+   - Scale: Titres 24-28px (--font-size-2xl), corps 16-18px (--font-size-base), labels 14px (--font-size-sm). Line-height 1.6 pour le confort de lecture prolongée.
+
+3. COLOR SYSTEM:
+   - Brand Primary (Bleu académique): Hue 220° (bleu froid, associé à l'intelligence et la fiabilité). --brand mappe vers --primary (boutons CTA), --accent (éléments interactifs), --ring (focus states).
+   - Neutral Grays: Palette étendue de gris (hue 220° pour cohérence chromatique) — --muted pour backgrounds secondaires, --border pour séparations subtiles.
+   - Semantic Colors: --chart-1 à --chart-5 utilisent des hues distinctes (bleu, vert, orange, violet, cyan) pour les 5 styles de gestion de conflits, avec luminosité calibrée pour accessibilité WCAG AA.
+   - Light Mode: Background blanc cassé (L=0.98) pour réduire la fatigue oculaire, foreground gris anthracite (L=0.22) pour contraste 12:1.
+   - Dark Mode: Background gris ardoise (L=0.12), foreground gris perle (L=0.92), avec saturation légèrement augmentée (+0.02) pour compenser la perte de vivacité perçue.
+
+4. USAGE GUIDE:
+   - Layout: Centered container (max-width: 720px) pour questions, full-width pour résultats avec graphiques. Padding généreux (2-3rem) pour respiration visuelle.
+   - Card Design: border-radius: 0.75rem (12px), box-shadow avec 3 couches (ambient + penumbra + rim-light simulé via inset shadow). Utiliser --card avec backdrop-blur(8px) si background image.
+   - Progress Bar: Utiliser --primary avec transition: width 400ms cubic-bezier(0.4, 0, 0.2, 1) pour animation fluide. Height: 6px, border-radius: 3px.
+   - Buttons: --primary background, --primary-foreground text, hover state avec brightness(1.1) + translateY(-1px). Active state avec scale(0.98).
+   - Transitions: Fade in/out entre questions avec opacity + transform: translateY(10px), durée 300ms. Éviter les animations > 500ms (perception de lenteur).
+   - Chart.js: Utiliser --chart-1 à --chart-5 pour les barres, --muted pour gridlines, --muted-foreground pour labels. Border-radius sur barres: 4px top.
+   - Responsive: Breakpoint à 640px — réduire font-size de 10%, padding de 25%, card border-radius à 8px. Stack horizontal layouts en vertical.
+   - Accessibility: Tous les interactive elements doivent avoir --ring focus indicator (2px solid, offset 2px). Minimum touch target: 44x44px.
+==========================================================================
+*/
+
+:root {
+  /* Typography */
+  --font-sans: Lato, Roboto, system-ui, -apple-system, sans-serif;
+  --font-mono: IBM Plex Mono, Consolas, monospace;
+  
+  /* Radius */
+  --radius: 0.75rem;
+
+  /* Core UI Tokens */
+  --background: oklch(0.98 0.005 220);
+  --foreground: oklch(0.22 0.015 220);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.015 220);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.015 220);
+  --primary: oklch(0.55 0.18 220);
+  --primary-foreground: oklch(0.98 0.005 220);
+  --secondary: oklch(0.92 0.01 220);
+  --secondary-foreground: oklch(0.28 0.02 220);
+  --muted: oklch(0.95 0.008 220);
+  --muted-foreground: oklch(0.48 0.02 220);
+  --accent: oklch(0.88 0.025 220);
+  --accent-foreground: oklch(0.28 0.02 220);
+  --destructive: oklch(0.58 0.22 15);
+  --destructive-foreground: oklch(0.98 0.005 15);
+  --border: oklch(0.88 0.01 220);
+  --input: oklch(0.88 0.01 220);
+  --ring: oklch(0.55 0.18 220);
+  
+  /* Chart Tokens */
+  --chart-1: oklch(0.55 0.18 220);
+  --chart-2: oklch(0.58 0.16 150);
+  --chart-3: oklch(0.65 0.20 50);
+  --chart-4: oklch(0.60 0.19 280);
+  --chart-5: oklch(0.62 0.17 190);
+  
+  /* Sidebar Tokens */
+  --sidebar: oklch(0.98 0.005 220);
+  --sidebar-foreground: oklch(0.35 0.02 220);
+  --sidebar-primary: oklch(0.55 0.18 220);
+  --sidebar-primary-foreground: oklch(0.98 0.005 220);
+  --sidebar-accent: oklch(0.92 0.01 220);
+  --sidebar-accent-foreground: oklch(0.28 0.02 220);
+  --sidebar-border: oklch(0.88 0.01 220);
+  --sidebar-ring: oklch(0.55 0.18 220);
+}
+
+.dark {
+  --background: oklch(0.12 0.015 220);
+  --foreground: oklch(0.92 0.01 220);
+  --card: oklch(0.16 0.018 220);
+  --card-foreground: oklch(0.92 0.01 220);
+  --popover: oklch(0.16 0.018 220);
+  --popover-foreground: oklch(0.92 0.01 220);
+  --primary: oklch(0.62 0.20 220);
+  --primary-foreground: oklch(0.12 0.015 220);
+  --secondary: oklch(0.22 0.02 220);
+  --secondary-foreground: oklch(0.88 0.012 220);
+  --muted: oklch(0.20 0.018 220);
+  --muted-foreground: oklch(0.62 0.025 220);
+  --accent: oklch(0.28 0.03 220);
+  --accent-foreground: oklch(0.92 0.01 220);
+  --destructive: oklch(0.62 0.24 15);
+  --destructive-foreground: oklch(0.95 0.008 15);
+  --border: oklch(0.28 0.02 220);
+  --input: oklch(0.28 0.02 220);
+  --ring: oklch(0.62 0.20 220);
+  
+  /* Chart Tokens */
+  --chart-1: oklch(0.62 0.20 220);
+  --chart-2: oklch(0.65 0.18 150);
+  --chart-3: oklch(0.70 0.22 50);
+  --chart-4: oklch(0.68 0.21 280);
+  --chart-5: oklch(0.68 0.19 190);
+  
+  /* Sidebar Tokens */
+  --sidebar: oklch(0.14 0.016 220);
+  --sidebar-foreground: oklch(0.78 0.015 220);
+  --sidebar-primary: oklch(0.62 0.20 220);
+  --sidebar-primary-foreground: oklch(0.12 0.015 220);
+  --sidebar-accent: oklch(0.22 0.02 220);
+  --sidebar-accent-foreground: oklch(0.88 0.012 220);
+  --sidebar-border: oklch(0.28 0.02 220);
+  --sidebar-ring: oklch(0.62 0.20 220);
+}
+
+@theme inline {
+  /* Shadcn Core Mapping */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts Mapping */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar Mapping */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* Radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans min-h-screen;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  code, pre {
+    @apply font-mono;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-primary;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40;
+  }
+}
